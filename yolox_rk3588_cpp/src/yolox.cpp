@@ -26,7 +26,28 @@ static void dump_tensor_attr(rknn_tensor_attr *attr)
            get_qnt_type_string(attr->qnt_type), attr->zp, attr->scale);
 }
 
-int init_yolox_model(const char *model_path, rknn_app_context_t *app_ctx)
+namespace yolox_rk3588_cpp
+{
+
+YOLOX::YOLOX(std::string model_path)
+{
+    memset(&rknn_app_ctx, 0, sizeof(rknn_app_context_t));
+    init_post_process();
+    if (init_yolox_model(model_path.c_str(), &rknn_app_ctx) != 0)
+    {
+        printf("init_yolox_model fail!\n");
+        return;
+    }
+}
+
+YOLOX::~YOLOX()
+{
+    deinit_post_process();
+    if (release_yolox_model(&rknn_app_ctx) != 0)
+        printf("release_yolox_model fail!\n");
+}
+
+int YOLOX::init_yolox_model(const char *model_path, rknn_app_context_t *app_ctx)
 {
     int ret;
     int model_len = 0;
@@ -130,7 +151,7 @@ int init_yolox_model(const char *model_path, rknn_app_context_t *app_ctx)
     return 0;
 }
 
-int release_yolox_model(rknn_app_context_t *app_ctx)
+int YOLOX::release_yolox_model(rknn_app_context_t *app_ctx)
 {
     if (app_ctx->rknn_ctx != 0)
     {
@@ -150,7 +171,7 @@ int release_yolox_model(rknn_app_context_t *app_ctx)
     return 0;
 }
 
-int inference_yolox_model(rknn_app_context_t *app_ctx, image_buffer_t *img, object_detect_result_list *od_results)
+int YOLOX::inference_yolox_model(rknn_app_context_t *app_ctx, image_buffer_t *img, object_detect_result_list *od_results)
 {
     int ret;
     image_buffer_t dst_img;
@@ -240,14 +261,14 @@ int inference_yolox_model(rknn_app_context_t *app_ctx, image_buffer_t *img, obje
 }
 
 
-cv::Mat3b image_buffer_to_mat3b(image_buffer_t* image_buffer)
+cv::Mat3b YOLOX::image_buffer_to_mat3b(image_buffer_t* image_buffer)
 {
     cv::Mat3b mat(image_buffer->height, image_buffer->width);
     memcpy(mat.data, image_buffer->virt_addr, image_buffer->size);
     return mat;
 }
 
-image_buffer_t mat3b_to_image_buffer(cv::Mat3b* mat)
+image_buffer_t YOLOX::mat3b_to_image_buffer(cv::Mat3b* mat)
 {
     image_buffer_t image_buffer;
     memset(&image_buffer, 0, sizeof(image_buffer_t));
@@ -262,7 +283,7 @@ image_buffer_t mat3b_to_image_buffer(cv::Mat3b* mat)
     return image_buffer;
 }
 
-void show_and_write(cv::Mat3b* mat, object_detect_result_list* od_results, const char* image_path)
+void YOLOX::show_and_write(cv::Mat3b* mat, object_detect_result_list* od_results, const char* image_path)
 {
     char text[256];
     for (int i = 0; i < od_results->count; i++)
@@ -284,3 +305,17 @@ void show_and_write(cv::Mat3b* mat, object_detect_result_list* od_results, const
     cv::imwrite("result.jpg", *mat);
     cv::waitKey(0);
 }
+
+object_detect_result_list YOLOX::inference(cv::Mat3b* mat)
+{
+    object_detect_result_list od_results;
+    memset(&od_results, 0, sizeof(object_detect_result_list));
+    image_buffer_t src_image;
+    memset(&src_image, 0, sizeof(image_buffer_t));
+    src_image = mat3b_to_image_buffer(mat);
+    inference_yolox_model(&rknn_app_ctx, &src_image, &od_results);
+    // inference_yolox_model(&rknn_app_ctx, &mat3b_to_image_buffer(mat), &od_results);
+    return od_results;
+}
+
+} // namespace yolox_rk3588_cpp
