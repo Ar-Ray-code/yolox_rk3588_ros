@@ -93,7 +93,7 @@ int YOLOX::init_yolox_model(const char *model_path, rknn_app_context_t *app_ctx)
             printf("rknn_query fail! ret=%d\n", ret);
             return -1;
         }
-        dump_tensor_attr(&(input_attrs[i]));
+        // dump_tensor_attr(&(input_attrs[i]));
     }
 
     // Get Model Output Info
@@ -109,7 +109,7 @@ int YOLOX::init_yolox_model(const char *model_path, rknn_app_context_t *app_ctx)
             printf("rknn_query fail! ret=%d\n", ret);
             return -1;
         }
-        dump_tensor_attr(&(output_attrs[i]));
+        // dump_tensor_attr(&(output_attrs[i]));
     }
 
     // Set to context

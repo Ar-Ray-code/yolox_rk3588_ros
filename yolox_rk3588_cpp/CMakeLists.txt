@@ -14,7 +14,7 @@ ament_auto_find_build_dependencies()
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)
 
-ament_auto_add_library(${PROJECT_NAME}
+ament_auto_add_library(${PROJECT_NAME} SHARED
     src/postprocess.cpp
     src/yolox.cpp
     src/image_utils.cpp
