@@ -14,10 +14,7 @@ ament_auto_find_build_dependencies()
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)
 
-file(GLOB LIBS_SO ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/*.so)
-
-ament_auto_add_executable(${PROJECT_NAME}
-    src/main.cpp
+ament_auto_add_library(${PROJECT_NAME}
     src/postprocess.cpp
     src/yolox.cpp
     src/image_utils.cpp
@@ -26,20 +23,25 @@ ament_auto_add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${OpenCV_LIBS}
-    ${LIBS_SO}
+    /usr/local/lib/librga.so
+    /usr/local/lib/librknnrt.so
     Threads::Threads
 )
-install(DIRECTORY
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_SYSTEM_NAME}/${TARGET_LIB_ARCH}/
+
+add_executable(${PROJECT_NAME}_exec
+    src/main.cpp
+)
+target_link_libraries(${PROJECT_NAME}_exec PRIVATE
+    ${PROJECT_NAME}
+    ${OpenCV_LIBS}
+    /usr/local/lib/librga.so
+    /usr/local/lib/librknnrt.so
+    Threads::Threads
+)
+
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_exec
     DESTINATION lib/${PROJECT_NAME}
 )
 
-install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-targets
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-)
-
 include_directories(include)
-
 ament_auto_package()
