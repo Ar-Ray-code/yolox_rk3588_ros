@@ -20,21 +20,22 @@
 #include "yolox_rk3588_cpp/image_utils.hpp"
 #include "yolox_rk3588_cpp/file_utils.hpp"
 
-
-typedef struct {
-    rknn_context rknn_ctx;
-    rknn_input_output_num io_num;
-    rknn_tensor_attr* input_attrs;
-    rknn_tensor_attr* output_attrs;
-    int model_channel;
-    int model_width;
-    int model_height;
-    bool is_quant;
-} rknn_app_context_t;
+#include "yolox_rk3588_cpp/rknn_type.hpp"
 #include "yolox_rk3588_cpp/postprocess.hpp"
 
 namespace yolox_rk3588_cpp
 {
+static const std::vector<std::string> COCO_CLASSES = {
+    "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
+    "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
+    "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee",
+    "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard",
+    "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
+    "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch",
+    "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard", "cell phone",
+    "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear",
+    "hair drier", "toothbrush"
+};
 
 class YOLOX
 {

@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <vector>
 #include "yolox_rk3588_cpp/rknpu2/rknn_api.h"
+#include "yolox_rk3588_cpp/rknn_type.hpp"
 #include "yolox_rk3588_cpp/common.hpp"
 #include "yolox_rk3588_cpp/image_utils.hpp"
 

@@ -309,12 +309,18 @@ void YOLOX::show_and_write(cv::Mat3b* mat, object_detect_result_list* od_results
 object_detect_result_list YOLOX::inference(cv::Mat3b* mat)
 {
     object_detect_result_list od_results;
-    memset(&od_results, 0, sizeof(object_detect_result_list));
     image_buffer_t src_image;
+
+    memset(&od_results, 0, sizeof(object_detect_result_list));    
     memset(&src_image, 0, sizeof(image_buffer_t));
     src_image = mat3b_to_image_buffer(mat);
+
     inference_yolox_model(&rknn_app_ctx, &src_image, &od_results);
-    // inference_yolox_model(&rknn_app_ctx, &mat3b_to_image_buffer(mat), &od_results);
+
+    if (src_image.virt_addr != NULL)
+    {
+        free(src_image.virt_addr);
+    }
     return od_results;
 }
 
