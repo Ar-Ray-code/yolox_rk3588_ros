@@ -1,0 +1,5 @@
+<library path="yolox_rk3588_plugin">
+    <class type="detector2d_plugins::YoloxRk3588" base_class_type="detector2d_base::Detector">
+        <description>yolox rk3588 npu example</description>
+    </class>
+</library>
