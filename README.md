@@ -1,6 +1,10 @@
 # yolox_rk3588
 YOLOX + RK3588
 
+## Depends
+
+[Ubuntu22.04 for Rockchip](https://github.com/Joshua-Riek/ubuntu-rockchip)
+
 ## INT8 Speed
 
 | Model | FPS |
