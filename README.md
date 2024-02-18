@@ -12,7 +12,7 @@ YOLOX + RK3588
 | YOLOX-Nano | 58 |
 | YOLOX-Tiny | 52 |
 | YOLOX-S | 23 |
-| YOLOX-M | |
+| YOLOX-M | 13 |
 
 ```text
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib"
