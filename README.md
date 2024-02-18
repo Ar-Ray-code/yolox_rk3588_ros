@@ -22,3 +22,7 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib"
 ```bash
 ros2 run yolox_rk3588_ros yolox_rk3588_ros_node  --ros-args -p model_path:=/home/rock5a/yolox_s_default.rknn
 ```
+
+## Ref
+
+- [airockchip/rknn_model_zoo](https://github.com/airockchip/rknn_model_zoo)
